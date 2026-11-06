@@ -1,0 +1,54 @@
+# Builds your app on a free GitHub Mac, runs it in the iPhone and iPad
+# simulators, and saves screenshots to the `preview-results` branch.
+# You shouldn't need to edit this file.
+name: Preview my app
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: preview
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use the newest Xcode
+        run: |
+          XC=$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)
+          sudo xcode-select -s "$XC"
+          xcodebuild -version
+
+      - name: Find your app
+        run: |
+          brew install xcodegen > /dev/null
+          python3 .preview/make_project.py
+
+      - name: Build
+        id: build
+        run: bash .preview/build.sh
+
+      - name: Take screenshots
+        if: steps.build.outcome == 'success'
+        env:
+          PREVIEW_WAIT: ${{ vars.PREVIEW_WAIT || '8' }}
+        run: bash .preview/shoot.sh
+
+      - name: Publish results to the preview-results branch
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 .preview/report.py
+          bash .preview/publish.sh

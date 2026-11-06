@@ -1,0 +1,10 @@
+# Optional: extra screens to capture, one per line.
+#
+#   name | launch arguments
+#
+# Your app reads launch arguments with UserDefaults, for example:
+#   UserDefaults.standard.string(forKey: "screen")   // "-screen about" gives "about"
+# and shows that screen when it starts. Lines starting with # are ignored.
+# Delete the line below if your app doesn't use it.
+
+about | -screen about
