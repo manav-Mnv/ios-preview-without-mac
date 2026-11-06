@@ -19,7 +19,7 @@ struct ContentView: View {
                         Image(systemName: "sparkles")
                             .font(.system(size: 44))
                             .foregroundStyle(.indigo)
-                        Txt("It runs!")
+                        Text("It runs!")
                             .font(.largeTitle.bold())
                         Text("This app was built and screenshotted on a free GitHub Mac. You didn't need a Mac, an iPhone or an iPad.")
                             .font(.title3)

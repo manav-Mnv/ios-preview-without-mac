@@ -37,6 +37,7 @@ HINTS = [
     (r"is only available in iOS (\d+)", "That feature needs iOS {0} or newer. Wrap it in `if #available(iOS {0}, *)` or raise the iOS version in Package.swift."),
     (r"'main' attribute|multiple types marked @main|@main", "Exactly one struct in your app should be marked `@main`."),
     (r"type '([^']+)' does not conform to protocol 'View'", "`{0}` needs a `var body: some View {{ … }}`."),
+    (r"cannot infer contextual base", "Usually a knock-on effect of the error just above it. Fix that one first."),
 ]
 
 
@@ -60,7 +61,7 @@ crashes = sorted(p.name for p in OUT.glob("*crash*"))
 if setup_error:
     lines += ["## ❌ Couldn't find your app", "", setup_error, ""]
 elif outcome != "success":
-    lines += ["## ❌ The build failed", "", f"{len(errors)} error(s). Fix these, then push again.", ""]
+    lines += ["## ❌ The build failed", "", f"{len(errors)} error(s). Fix the **first** one first: later errors are often caused by it. Then push again.", ""]
     for e in errors[:40]:
         lines.append(f"- `{e[:300]}`")
         h = hint_for(e)
