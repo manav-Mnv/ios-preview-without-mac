@@ -1,0 +1,2 @@
+iphone: iPhone 17 Pro Max
+ipad: iPad Pro 13-inch
